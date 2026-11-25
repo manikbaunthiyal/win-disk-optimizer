@@ -1,0 +1,36 @@
+name: Request New Cache / Cleanup Rule
+description: Suggest a common Windows app cache, updater, or relocatable folder for the rule engine
+title: "[Rule]: "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: app_name
+    attributes:
+      label: Application or Tool Name
+      placeholder: "e.g., JetBrains, Android Studio, Ollama"
+    validations:
+      required: true
+  - type: input
+    id: path
+    attributes:
+      label: Typical Path (use %LOCALAPPDATA%, %APPDATA%, or %USERPROFILE%)
+      placeholder: "e.g., %LOCALAPPDATA%\\ExampleApp\\Cache"
+    validations:
+      required: true
+  - type: dropdown
+    id: classification
+    attributes:
+      label: Suggested Classification
+      options:
+        - NotNeeded (safe cache / log / crash dump)
+        - NeededMoveOffC (valuable cache, relocate to secondary drive)
+        - OptionalReview (large media / preview cache, ask user first)
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why is it safe to delete or relocate?
+      description: Confirm whether deleting/moving preserves user logins, settings, and project data.
+    validations:
+      required: true

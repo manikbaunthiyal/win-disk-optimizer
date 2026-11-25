@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Windows PowerShell & PowerShell 7
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell_exe: [powershell, pwsh]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run automated test suite
+        shell: cmd
+        run: ${{ matrix.shell_exe }} -NoProfile -ExecutionPolicy Bypass -File .\tests\Test-DiskOptimizer.ps1
+
+      - name: Smoke test Report mode (JSON export)
+        shell: cmd
+        run: ${{ matrix.shell_exe }} -NoProfile -ExecutionPolicy Bypass -File .\Optimize-Disk.ps1 -Mode Report -IncludeInstallerAudit:$false -ExportJson .\ci-report.json
