@@ -98,6 +98,7 @@ try {
 
     New-Item -ItemType Directory -Path `
         (Join-Path $fakeLocal 'Temp'),
+        (Join-Path $fakeWin 'Temp'),
         (Join-Path $fakeLocal 'Google\Chrome\User Data\Profile 1\Code Cache'),
         (Join-Path $fakeUser '.gradle'),
         (Join-Path $fakeLocal 'Pub'),
@@ -110,6 +111,8 @@ try {
     $oldTemp = Join-Path $fakeLocal 'Temp\stale.tmp'
     [System.IO.File]::WriteAllBytes($oldTemp, (New-Object byte[] (2MB)))
     (Get-Item $oldTemp).LastWriteTime = (Get-Date).AddHours(-3)
+    # Fresh file only in Windows\Temp ensures Get-AgedDirectorySizeBytes handles 0 matching files safely
+    [System.IO.File]::WriteAllBytes((Join-Path $fakeWin 'Temp\fresh.tmp'), (New-Object byte[] (2MB)))
 
     [System.IO.File]::WriteAllBytes((Join-Path $fakeLocal 'Google\Chrome\User Data\Profile 1\Code Cache\js.bin'), (New-Object byte[] (2MB)))
     [System.IO.File]::WriteAllBytes((Join-Path $fakeLocal 'Google\Chrome\User Data\Profile 1\Cookies'), (New-Object byte[] 1024))

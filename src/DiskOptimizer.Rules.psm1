@@ -83,11 +83,9 @@ function Get-AgedDirectorySizeBytes {
     if ($MinAgeMinutes -le 0) { return (Get-DirectorySizeFast -Path $Path) }
 
     $cutoff = (Get-Date).AddMinutes(-$MinAgeMinutes)
-    $sum = (Get-ChildItem -LiteralPath $Path -Force -Recurse -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.LastWriteTime -lt $cutoff } |
-        Measure-Object Length -Sum).Sum
-    if ($sum) { return [int64]$sum }
-    return [int64]0
+    $agedFiles = @(Get-ChildItem -LiteralPath $Path -Force -Recurse -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.LastWriteTime -lt $cutoff })
+    return (Get-PropertySum -Items $agedFiles -Property 'Length')
 }
 
 function Get-TempAndCrashDecisions {
@@ -442,7 +440,7 @@ function Get-DuplicateToolAndReviewDecisions {
             $_.Extension -in '.exe', '.msi', '.msix', '.iso' -and $_.Length -ge 25MB -and $_.LastWriteTime -lt $oldCutoff
         })
         if ($oldInstallers.Count -gt 0) {
-            $sumBytes = [int64](($oldInstallers | Measure-Object Length -Sum).Sum)
+            $sumBytes = Get-PropertySum -Items $oldInstallers -Property 'Length'
             New-RuleDecision -Id 'review.downloads.installers' -Name "Old Downloads Installers ($($oldInstallers.Count) files)" `
                 -Category 'MediaReview' -Path $downloadsDir -ItemType 'FileList' -TargetPaths @($oldInstallers.FullName) `
                 -SizeBytes $sumBytes -NeededStatus 'OptionalReview' -RecommendedAction 'ReviewPrompt' -Confidence 'Medium' `
