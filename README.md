@@ -58,7 +58,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\Optimize-Disk.ps1 -Mode Au
 To schedule weekly automatic safe cleanup via Windows Task Scheduler:
 
 ```powershell
-$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-NoProfile -ExecutionPolicy Bypass -File "D:\AI\win-disk-optimizer\Optimize-Disk.ps1" -Mode AutoSafe -IncludeInstallerAudit:$false'
+$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-NoProfile -ExecutionPolicy Bypass -File "D:\AI\win-disk-optimizer\Optimize-Disk.ps1" -Mode AutoSafe -SkipInstallerAudit'
 $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 11am
 Register-ScheduledTask -TaskName 'WinDiskOptimizer-Weekly' -Action $action -Trigger $trigger -Description 'Safe weekly C: cache cleanup'
 ```

@@ -20,7 +20,7 @@ param(
 
     [switch]$AutoRelocate,
 
-    [bool]$IncludeInstallerAudit = $true,
+    [switch]$SkipInstallerAudit,
 
     [int]$MinItemSizeMB = 5,
 
@@ -176,7 +176,7 @@ function Export-ReportMarkdown {
 $driveLetter = ($env:SystemDrive -replace ':', '')
 $beforeFree = (Get-PSDrive -Name $driveLetter).Free
 $drives = @(Get-DriveUsageSummary)
-$decisions = @(Get-DiskCleanupRecommendations -MinTempAgeMinutes $MinTempAgeMinutes -MinItemSizeMB $MinItemSizeMB -IncludeInstallerAudit:$IncludeInstallerAudit)
+$decisions = @(Get-DiskCleanupRecommendations -MinTempAgeMinutes $MinTempAgeMinutes -MinItemSizeMB $MinItemSizeMB -IncludeInstallerAudit:(-not $SkipInstallerAudit))
 
 Format-RuleReport -Decisions $decisions -Drives $drives
 

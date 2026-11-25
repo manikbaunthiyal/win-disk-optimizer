@@ -166,10 +166,10 @@ try {
     & (Join-Path $repoRoot 'scripts\Move-CacheToDrive.ps1') -DestinationRoot (Join-Path $sandbox 'Dest') -Keys gradle -WhatIf | Out-Null
     Assert-True ($?) "Move-CacheToDrive.ps1 -WhatIf executes cleanly"
 
-    & (Join-Path $repoRoot 'Optimize-Disk.ps1') -Mode AutoSafe -IncludeInstallerAudit:$false -WhatIf *>$null
+    & (Join-Path $repoRoot 'Optimize-Disk.ps1') -Mode AutoSafe -SkipInstallerAudit -WhatIf *>$null
     Assert-True ($?) "Optimize-Disk.ps1 -Mode AutoSafe -WhatIf executes cleanly"
 
-    & (Join-Path $repoRoot 'Optimize-Disk.ps1') -Mode Report -IncludeInstallerAudit:$true | Out-Null
+    & (Join-Path $repoRoot 'Optimize-Disk.ps1') -Mode Report | Out-Null
     Assert-True ($?) "Optimize-Disk.ps1 -Mode Report with installer audit executes cleanly"
 } finally {
     if (Test-Path -LiteralPath $sandbox) {

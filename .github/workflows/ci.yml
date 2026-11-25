@@ -26,4 +26,4 @@ jobs:
 
       - name: Smoke test Report mode (JSON export)
         shell: cmd
-        run: ${{ matrix.shell_exe }} -NoProfile -ExecutionPolicy Bypass -File .\Optimize-Disk.ps1 -Mode Report -IncludeInstallerAudit:$false -ExportJson .\ci-report.json
+        run: ${{ matrix.shell_exe }} -NoProfile -ExecutionPolicy Bypass -File .\Optimize-Disk.ps1 -Mode Report -SkipInstallerAudit -ExportJson .\ci-report.json
